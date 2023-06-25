@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { useRouter } from "next/navigation";
 import axios from 'axios';
+import ReCAPTCHA from 'react-google-recaptcha';
 import { v4 as uuidv4 } from 'uuid';
 import Input from './Input';
 import TextArea from './TextArea';
@@ -15,9 +16,13 @@ const ContactForm = () => {
    const [message, setMessage] = useState('');
    const [isSaving, setIsSaving] = useState(false);
    const [hasError, setHasError] = useState(false);
+   const [recaptchaToken, setRecaptchaToken] = useState(null);
+
+   const handleRecaptchaChange = (token: any) => {
+      setRecaptchaToken(token);
+    };
 
    const handleSubmit = async () => {
-
       setIsSaving(true);
       setHasError(false);
 
@@ -33,7 +38,7 @@ const ContactForm = () => {
       localStorage.setItem('idSugerencia', id);
       
       axios.post('/api/dynamo', {
-         id, name, email, message
+         id, name, email, message, recaptchaToken
        })
        .then(() => {
          router.push('/thankyou');
@@ -108,7 +113,7 @@ const ContactForm = () => {
 
                   <hr className='h-px mb-6 bg-gray-500 border-0 w-11/12' />
 
-                  <>
+                  <form>
                      <div className='flex flex-col gap-4 mt-4'>
                         <Input
                            id='name'
@@ -137,11 +142,18 @@ const ContactForm = () => {
                            onChange={(ev: any) => setMessage(ev.target.value)}
                         />
                      </div>
-                  </>
+                  </form>
+
+                  <div className="mt-4">
+                     <ReCAPTCHA
+                        sitekey="6LeXbR4gAAAAACEoWJd-fxWmIYCGN2fyVlvq9Ahi"
+                        onChange={handleRecaptchaChange}
+                     />
+                  </div>
 
                   <button
                      onClick={handleSubmit}
-                     disabled={isSaving}
+                     disabled={isSaving || !recaptchaToken}
                      className='
                     bg-blue-600 
                       py-3 

@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import AWS from 'aws-sdk';
+import axios from 'axios';
 import { config } from 'dotenv';
 
 config();
@@ -34,6 +35,28 @@ export async function POST(request: Request) {
          });
       }
 
+      // Verifica el token de reCAPTCHA
+      const recaptchaToken = body.recaptchaToken;
+      const recaptchaSecretKey = process.env.RECAPTCHA_SECRET_KEY;
+
+      try {
+         const recaptchaResponse = await axios.post(
+            `https://www.google.com/recaptcha/api/siteverify?secret=${recaptchaSecretKey}&response=${recaptchaToken}`
+         );
+
+         if (!recaptchaResponse.data.success) {
+            return NextResponse.json({
+               message: 'La verificación de reCAPTCHA ha fallado',
+            });
+         }
+      } catch (error) {
+         console.error('Error al verificar reCAPTCHA:', error);
+         return NextResponse.json({
+            message: 'Error al verificar reCAPTCHA',
+         });
+      }
+
+      // Guarda en la DynamoDB
       const item = {
          PK: 'SUGERENCIAS',
          SK: 'SUGERENCIAS#' + formattedDate,
