@@ -28,15 +28,21 @@ export async function POST(request: Request) {
 
       const formattedDate = `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
 
+      if (body.name === '' || body.email === '' || body.message === '') {
+         return NextResponse.json({
+            message: 'Todos los campos son requeridos',
+         });
+      }
+
       const item = {
-         PK: "SUGERENCIAS",
-         SK: "SUGERENCIAS#" + formattedDate,
+         PK: 'SUGERENCIAS',
+         SK: 'SUGERENCIAS#' + formattedDate,
          id: body.id,
          name: body.name,
          email: body.email,
          message: body.message,
          creationDate: formattedDate,
-       };
+      };
 
       // Configura los parámetros para la operación de escritura en DynamoDB
       const params = {

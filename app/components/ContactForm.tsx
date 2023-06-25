@@ -14,12 +14,23 @@ const ContactForm = () => {
    const [email, setEmail] = useState('');
    const [message, setMessage] = useState('');
    const [isSaving, setIsSaving] = useState(false);
+   const [hasError, setHasError] = useState(false);
 
    const handleSubmit = async () => {
 
       setIsSaving(true);
+      setHasError(false);
+
+      if(name === '' || email === '' || message === '') {
+         console.log('Todos los campos son requeridos');
+         setHasError(true);
+         setIsSaving(false);
+         return false;
+      }
 
       const id = uuidv4();
+
+      localStorage.setItem('idSugerencia', id);
       
       axios.post('/api/dynamo', {
          id, name, email, message
@@ -29,9 +40,10 @@ const ContactForm = () => {
        })
        .catch(() => {
          console.error('Something went wrong.');
+       })
+       .finally(() => {
+         setIsSaving(false);
        });
-
-       setIsSaving(false);
    };
 
    return (
@@ -44,6 +56,7 @@ const ContactForm = () => {
             bg-center
             bg-fixed
             bg-cover
+            p-3
             '
       >
          <div
@@ -79,7 +92,7 @@ const ContactForm = () => {
                      font-light 
                   '
                   >
-                     Complete the form
+                     Completar el formulario
                   </h1>
 
                   <h2
@@ -90,7 +103,7 @@ const ContactForm = () => {
                      font-light
                   '
                   >
-                     {`It will be saved in a DynamoDB and an email will be sent you`}
+                     {`Se guardaran los datos en DynamoDB`}
                   </h2>
 
                   <hr className='h-px mb-6 bg-gray-500 border-0 w-11/12' />
@@ -100,7 +113,7 @@ const ContactForm = () => {
                         <Input
                            id='name'
                            type='text'
-                           label='Name'
+                           label='Nombre completo'
                            value={name}
                            onChange={(ev: any) => setName(ev.target.value)}
                         />
@@ -110,7 +123,7 @@ const ContactForm = () => {
                         <Input
                            id='email'
                            type='email'
-                           label='Email'
+                           label='Correo electrónico'
                            value={email}
                            onChange={(ev: any) => setEmail(ev.target.value)}
                         />
@@ -119,7 +132,7 @@ const ContactForm = () => {
                      <div className='flex flex-col gap-4 mt-4'>
                         <TextArea
                            id='message'
-                           label='Message'
+                           label='Sugerencia o reclamo'
                            value={message}
                            onChange={(ev: any) => setMessage(ev.target.value)}
                         />
@@ -140,8 +153,12 @@ const ContactForm = () => {
                       transition
                    '
                   >
-                     { isSaving ? 'Saving...' : 'Submit'}
+                     { isSaving ? 'Guardando...' : 'Enviar'}
                   </button>
+
+                  <div className={`mt-4 ${hasError ? 'block' : 'hidden'}`}>
+                     <p className='text-white text-center mt-3'>Todos los campos son requeridos</p>
+                  </div>
                </div>
             </div>
          </div>
