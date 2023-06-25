@@ -1,14 +1,17 @@
 import { NextResponse } from 'next/server';
 import AWS from 'aws-sdk';
+import { config } from 'dotenv';
+
+config();
 
 export async function POST(request: Request) {
    const body = await request.json();
 
    // Configura las credenciales y la región de AWS
    AWS.config.update({
-      accessKeyId: 'AKIAYETLSVMPSYJ73NN4',
-      secretAccessKey: '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',
-      region: 'us-east-2',
+      accessKeyId: process.env.AWS_ACCESS_KEY_ID,
+      secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
+      region: process.env.AWS_REGION,
    });
 
    // Crea una instancia del cliente de DynamoDB
