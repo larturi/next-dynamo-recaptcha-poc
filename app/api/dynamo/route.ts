@@ -1,9 +1,38 @@
 import { NextResponse } from 'next/server';
-import AWS from 'aws-sdk';
-import axios from 'axios';
-import { config } from 'dotenv';
+import AWS, { config, SES } from "aws-sdk";
 
-config();
+import axios from 'axios';
+import { config as dotenvConfig } from 'dotenv';
+
+dotenvConfig();
+
+const ses = new SES();
+
+const sendEmail = async (destinatario: string) => {
+   try {
+     const params = {
+       Destination: {
+         ToAddresses: [destinatario]
+       },
+       Message: {
+         Body: {
+           Text: {
+             Data: `Gracias por completar el formulario. Tu mensaje ha sido recibido correctamente.`,
+           },
+         },
+         Subject: {
+           Data: "Gracias por tu mensaje",
+         },
+       },
+       Source: "lnarturi.teco@gmail.com", // Remitente
+     };
+ 
+     await ses.sendEmail(params).promise();
+     console.log("Correo electrónico enviado correctamente");
+   } catch (error) {
+     console.error("Error al enviar el correo electrónico:", error);
+   }
+ };
 
 export async function POST(request: Request) {
    const body = await request.json();
@@ -73,8 +102,10 @@ export async function POST(request: Request) {
          Item: item,
       };
 
-      // Guarda los datos en DynamoDB
       await dynamoDB.put(params).promise();
+
+      // Envio de Email con AWS SMS
+      await sendEmail(body.email);
 
       return NextResponse.json({ message: 'Datos guardados en DynamoDB' });
    } catch (error) {
