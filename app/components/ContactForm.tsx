@@ -14,6 +14,7 @@ const ContactForm = () => {
    const [name, setName] = useState('');
    const [email, setEmail] = useState('');
    const [message, setMessage] = useState('');
+   const [errorMessage, setErrorMessage] = useState('Todos los campos son requeridos');
    const [isSaving, setIsSaving] = useState(false);
    const [hasError, setHasError] = useState(false);
    const [recaptchaToken, setRecaptchaToken] = useState(null);
@@ -27,7 +28,6 @@ const ContactForm = () => {
       setHasError(false);
 
       if(name === '' || email === '' || message === '') {
-         console.log('Todos los campos son requeridos');
          setHasError(true);
          setIsSaving(false);
          return false;
@@ -37,14 +37,15 @@ const ContactForm = () => {
 
       localStorage.setItem('idSugerencia', id);
       
-      axios.post('/api/dynamo', {
+      axios.post('/api/sugerencias', {
          id, name, email, message, recaptchaToken
        })
        .then(() => {
          router.push('/thankyou');
        })
-       .catch(() => {
-         console.error('Something went wrong.');
+       .catch((error) => {
+         setErrorMessage(error.response.data.error)
+         setHasError(true);
        })
        .finally(() => {
          setIsSaving(false);
@@ -165,11 +166,11 @@ const ContactForm = () => {
                       transition
                    '
                   >
-                     { isSaving ? 'Guardando...' : 'Enviar'}
+                     { isSaving ? 'Enviando...' : 'Enviar'}
                   </button>
 
                   <div className={`mt-4 ${hasError ? 'block' : 'hidden'}`}>
-                     <p className='text-white text-center mt-3'>Todos los campos son requeridos</p>
+                     <p className='text-white text-center mt-3'>{errorMessage}</p>
                   </div>
                </div>
             </div>
