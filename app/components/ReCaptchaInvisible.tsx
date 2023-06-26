@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 'use client'
 
 import React, { useEffect, useRef } from 'react';
@@ -5,9 +6,13 @@ import ReCAPTCHA from 'react-google-recaptcha';
 
 interface ReCaptchaInvisibleProps {
    setRecaptchaToken: any;
+   hasError: boolean;
 }
 
-const ReCaptchaInvisible: React.FC<ReCaptchaInvisibleProps> = ({ setRecaptchaToken }) => {
+const ReCaptchaInvisible: React.FC<ReCaptchaInvisibleProps> = ({ 
+    setRecaptchaToken,
+    hasError
+}) => {
   const recaptchaRef = useRef<ReCAPTCHA>(null);
 
   useEffect(() => {
@@ -15,6 +20,20 @@ const ReCaptchaInvisible: React.FC<ReCaptchaInvisibleProps> = ({ setRecaptchaTok
       recaptchaRef.current.execute();
     }
   }, []);
+
+  useEffect(() => {
+    if(hasError) {
+      handleResetRecaptcha();
+    }
+  }, [hasError]);
+
+  const handleResetRecaptcha = async () => {
+    if (recaptchaRef.current) {
+      recaptchaRef.current.reset();
+      const token = await recaptchaRef.current.executeAsync();
+      setRecaptchaToken(token);
+    }
+  };
 
   const handleRecaptchaChange = (token: string | null) => {
     if (token) {

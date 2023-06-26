@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import axios from 'axios';
 import { v4 as uuidv4 } from 'uuid';
@@ -14,9 +14,7 @@ const ContactForm = () => {
    const [name, setName] = useState('');
    const [email, setEmail] = useState('');
    const [message, setMessage] = useState('');
-   const [errorMessage, setErrorMessage] = useState(
-      'Todos los campos son requeridos'
-   );
+   const [errorMessage, setErrorMessage] = useState('Todos los campos son requeridos');
    const [isSaving, setIsSaving] = useState(false);
    const [hasError, setHasError] = useState(false);
    const [recaptchaToken, setRecaptchaToken] = useState(null);
@@ -176,7 +174,7 @@ const ContactForm = () => {
             </div>
          </div>
 
-         <ReCaptchaInvisible setRecaptchaToken={setRecaptchaToken} />
+         <ReCaptchaInvisible setRecaptchaToken={setRecaptchaToken} hasError={hasError} />
       </>
    );
 };
