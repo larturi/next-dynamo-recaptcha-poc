@@ -3,11 +3,11 @@
 import React from 'react';
 import ReCAPTCHA from 'react-google-recaptcha';
 
-interface ReCaptchaV2Props {
-    setRecaptchaToken: any;
+interface ReCaptchaVisibleProps {
+   setRecaptchaToken: any;
 }
 
-const ReCaptchaV2: React.FC<ReCaptchaV2Props> = ({setRecaptchaToken}) => {
+const ReCaptchaVisible: React.FC<ReCaptchaVisibleProps> = ({setRecaptchaToken}) => {
    const handleRecaptchaChange = (token: any) => {
       setRecaptchaToken(token);
    };
@@ -16,7 +16,7 @@ const ReCaptchaV2: React.FC<ReCaptchaV2Props> = ({setRecaptchaToken}) => {
       <div className='relative'>
          <div className='absolute bottom-0 right-0'>
             <ReCAPTCHA
-               sitekey={process.env.NEXT_PUBLIC_RECAPTCHA_KEY_ID || ''}
+               sitekey={process.env.NEXT_PUBLIC_RECAPTCHA_KEY_ID!}
                onChange={handleRecaptchaChange}
             />
          </div>
@@ -24,4 +24,4 @@ const ReCaptchaV2: React.FC<ReCaptchaV2Props> = ({setRecaptchaToken}) => {
    );
 };
 
-export default ReCaptchaV2;
+export default ReCaptchaVisible;

@@ -1,12 +1,12 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import axios from 'axios';
 import { v4 as uuidv4 } from 'uuid';
 import Input from './Input';
 import TextArea from './TextArea';
-import ReCaptchaV2 from './ReCaptchaV2';
+import ReCaptchaInvisible from './ReCaptchaInvisible';
 
 const ContactForm = () => {
    const router = useRouter();
@@ -30,7 +30,7 @@ const ContactForm = () => {
          setIsSaving(false);
          return false;
       }
-
+      
       const id = uuidv4();
 
       localStorage.setItem('idSugerencia', id);
@@ -54,7 +54,7 @@ const ContactForm = () => {
             setIsSaving(false);
          });
    };
-
+   
    return (
       <>
          <div
@@ -176,7 +176,7 @@ const ContactForm = () => {
             </div>
          </div>
 
-         <ReCaptchaV2 setRecaptchaToken={setRecaptchaToken} />
+         <ReCaptchaInvisible setRecaptchaToken={setRecaptchaToken} />
       </>
    );
 };
