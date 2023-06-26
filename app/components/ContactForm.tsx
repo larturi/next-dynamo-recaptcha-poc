@@ -6,7 +6,7 @@ import axios from 'axios';
 import { v4 as uuidv4 } from 'uuid';
 import Input from './Input';
 import TextArea from './TextArea';
-import ReCaptchaGoogle from './ReCaptchaGoogle';
+import ReCaptchaV2 from './ReCaptchaV2';
 
 const ContactForm = () => {
    const router = useRouter();
@@ -176,7 +176,7 @@ const ContactForm = () => {
             </div>
          </div>
 
-         <ReCaptchaGoogle setRecaptchaToken={setRecaptchaToken} />
+         <ReCaptchaV2 setRecaptchaToken={setRecaptchaToken} />
       </>
    );
 };

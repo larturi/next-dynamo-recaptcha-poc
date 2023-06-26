@@ -3,11 +3,11 @@
 import React from 'react';
 import ReCAPTCHA from 'react-google-recaptcha';
 
-interface ReCaptchaGoogleProps {
+interface ReCaptchaV2Props {
     setRecaptchaToken: any;
 }
 
-const ReCaptchaGoogle: React.FC<ReCaptchaGoogleProps> = ({setRecaptchaToken}) => {
+const ReCaptchaV2: React.FC<ReCaptchaV2Props> = ({setRecaptchaToken}) => {
    const handleRecaptchaChange = (token: any) => {
       setRecaptchaToken(token);
    };
@@ -24,4 +24,4 @@ const ReCaptchaGoogle: React.FC<ReCaptchaGoogleProps> = ({setRecaptchaToken}) =>
    );
 };
 
-export default ReCaptchaGoogle;
+export default ReCaptchaV2;
