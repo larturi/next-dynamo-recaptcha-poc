@@ -2,7 +2,7 @@
 
 ## Tecnologias
 
-- Next.js
+- Next.js v13
 - AWS DynamoDB
 - AWS Simple Email Service
 - Google Recaptcha
@@ -11,7 +11,7 @@
 ## Get Started
 
 1. Copiar .env.template y crear el .env con las variables de Google Recaptcha y AWS IAM
-2. Instalar las dependcias
+2. Instalar las dependencias
 
 ```bash
  yarn
